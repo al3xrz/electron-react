@@ -1,6 +1,8 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('node:path');
-const {fillTemplate} = require('./lib/templater')
+// const {fillTemplate} = require('./lib/templater')
+const { run } = require('./lib/templater2')
+
 
 if (require('electron-squirrel-startup')) {
   app.quit();
@@ -13,17 +15,17 @@ const createWindow = () => {
     height: 600,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
-      
+
     },
-    
+
   });
   mainWindow.setMenuBarVisibility(false);
   mainWindow.loadURL('http://localhost:3000');
-  
+
   // and load the index.html of the app.
   // ... for  production
   // mainWindow.loadFile(path.join(__dirname, 'index.html'));
-  
+
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
 };
@@ -36,11 +38,12 @@ app.whenReady().then(() => {
 
   ipcMain.handle('buildDoc', async (e, params) => {
     console.log('Получено:', params)
-    fillTemplate();
+    // fillTemplate();
+    run(params)
     return true
   })
-    
-  
+
+
   createWindow();
 
   // On OS X it's common to re-create a window in the app when the
